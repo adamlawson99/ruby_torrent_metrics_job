@@ -1,0 +1,8 @@
+default: &default
+  bootstrap_servers: "127.0.0.1:9092"
+
+development:
+  <<: *default
+
+production:
+  <<: *default

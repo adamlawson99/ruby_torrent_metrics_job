@@ -1,0 +1,6 @@
+development:
+  torrent_metrics_collector_job:
+    class: TorrentMetricsCollectorJob
+    args: []
+    schedule: every 15 seconds
+

@@ -1,0 +1,8 @@
+default: &default
+  api_base: "http://192.168.2.189:8080"
+
+development:
+  <<: *default
+
+production:
+  <<: *default
