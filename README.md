@@ -87,7 +87,7 @@ bin/jobs start
 
 ## Job Configuration
 
-By default, the metrics scraper job runs every 5 minutes. You can modify the schedule in `config/initializers/scheduler.rb`.
+By default, the metrics scraper job runs every 15 seconds. You can modify the schedule in `config/recurring.yml`.
 
 ## Data Format
 
@@ -95,40 +95,21 @@ The metrics are published to Kafka in the following JSON format:
 
 ```json
 {
-  "timestamp": "2025-05-19T12:34:56Z",
-  "torrent_hash": "abcdef123456789...",
-  "name": "Example Torrent",
-  "size": 1073741824,
-  "progress": 0.85,
-  "download_speed": 1048576,
-  "upload_speed": 524288,
-  "ratio": 0.5,
-  "seeds": 10,
-  "peers": 15,
-  "state": "downloading"
+  "torrents": [
+    {
+      "hash": string,
+      "download_speed": int,
+      "upload_speed": int,
+      "state": string,
+      "progress": float
+    },
+    {
+      "hash": string,
+      "download_speed": int,
+      "upload_speed": int,
+      "state": string,
+      "progress": float
+    }
+  ]
 }
-```
-
-## Development
-
-### Running Tests
-
-```bash
-bundle exec rspec
-```
-
-### Adding New Metrics
-
-To add new metrics to be scraped and published, modify the `TorrentMetricsJob` class in `app/jobs/torrent_metrics_job.rb`.
-
-## License
-
-[Your License Here]
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+```add new metrics to be scraped and published, modify the `TorrentMetricsJob` class in `app/jobs/torrent_metrics_job.rb`.
