@@ -1,3 +1,0 @@
-class MetricCollectorJob < ApplicationJob
-
-end

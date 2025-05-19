@@ -1,24 +1,134 @@
-# README
+# Torrent Metrics Publisher
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Ruby on Rails application that scrapes torrent metrics from qBittorrent and publishes them to a Kafka stream using ActiveJob.
 
-Things you may want to cover:
+## Overview
 
-* Ruby version
+This project automatically collects metrics from qBittorrent and streams them to Kafka for further processing and analysis. It uses ActiveJob to schedule and manage the scraping jobs.
 
-* System dependencies
+## Prerequisites
 
-* Configuration
+- Ruby 3.0+
+- Rails 7.0+
+- Docker and Docker Compose
+- Git
 
-* Database creation
+## Dependencies
 
-* Database initialization
+This project requires the [qBittorrent Client](https://github.com/adamlawson99/qbittorrent_client) to be checked out locally.
 
-* How to run the test suite
+## Setup
 
-* Services (job queues, cache servers, search engines, etc.)
+### 1. Clone the required repositories
 
-* Deployment instructions
+```bash
+# Clone the qBittorrent client dependency
+git clone https://github.com/adamlawson99/qbittorrent_client.git
 
-* ...
+# Clone this repository
+git clone [your-repository-url]
+cd [your-repository-name]
+```
+
+### 2. Start Docker services
+
+```bash
+docker compose up
+```
+
+Wait for all containers to initialize completely.
+
+### 3. Configure the application
+
+Edit the configuration files to point to your qBittorrent instance and Kafka broker:
+
+#### `config/qbittorrent.yml`:
+```yaml
+default: &default
+  api_base: "http://192.168.2.189:8080"
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+```
+
+#### `config/kafka.yml`:
+```yaml
+default: &default
+  bootstrap_servers: "127.0.0.1:9092"
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+```
+
+Set your qbittorrent credentials, set keys `qbittorrent_username` and `qbittorrent_password`
+
+```ruby
+rails credentials:edit
+```
+example
+```yaml
+qbittorrent_username: admin
+qbittorrent_password: adminadmin
+```
+
+## Running the Application
+
+Start the ActiveJob workers to begin scraping and publishing metrics:
+
+```bash
+bin/jobs start
+```
+
+## Job Configuration
+
+By default, the metrics scraper job runs every 5 minutes. You can modify the schedule in `config/initializers/scheduler.rb`.
+
+## Data Format
+
+The metrics are published to Kafka in the following JSON format:
+
+```json
+{
+  "timestamp": "2025-05-19T12:34:56Z",
+  "torrent_hash": "abcdef123456789...",
+  "name": "Example Torrent",
+  "size": 1073741824,
+  "progress": 0.85,
+  "download_speed": 1048576,
+  "upload_speed": 524288,
+  "ratio": 0.5,
+  "seeds": 10,
+  "peers": 15,
+  "state": "downloading"
+}
+```
+
+## Development
+
+### Running Tests
+
+```bash
+bundle exec rspec
+```
+
+### Adding New Metrics
+
+To add new metrics to be scraped and published, modify the `TorrentMetricsJob` class in `app/jobs/torrent_metrics_job.rb`.
+
+## License
+
+[Your License Here]
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
