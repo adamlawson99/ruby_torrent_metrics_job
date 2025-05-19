@@ -112,4 +112,4 @@ The metrics are published to Kafka in the following JSON format:
     }
   ]
 }
-```add new metrics to be scraped and published, modify the `TorrentMetricsJob` class in `app/jobs/torrent_metrics_job.rb`.
+```
