@@ -93,7 +93,7 @@ By default, the metrics scraper job runs every 15 seconds. You can modify the sc
 
 The metrics are published to Kafka in the following JSON format:
 
-```json
+```yml
 {
   "torrents": [
     {
